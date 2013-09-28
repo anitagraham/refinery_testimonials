@@ -1,0 +1,30 @@
+<div class='wym_skin_refinery page_part' id='page_testimonials_picker'>
+
+	<div class='field enable'>
+
+		<p>
+			Show Testimonials on this page?<br>
+			<%= f.radio_button :testimonials_show, 1%>
+			<%= f.label :testimonials_show, 'Yes', :value=>1 %>
+			<%= f.radio_button :testimonials_show, 0  %>
+		<%= f.label :testimonials_show, 'No', :value=> 0%>
+		</p>
+	</div>
+
+	<div class='fields'>
+		<p>
+			<%= f.label  :testimonials_count, "How many testimonials to show (Enter 0 to show all)" %>
+			<%= f.number_field  :testimonials_count, :disabled =>@page.testimonials_show==1 		 	 %>
+		</p>
+
+		<p>Select Testimonals By	</p>
+			<%= f.radio_button  :testimonials_select,  1, :disabled =>@page.testimonials_show==1%>
+			<%= f.label :testimonials_select, 'By date (Recent first)', :value=> 'Recent' %>
+			<%= f.radio_button  :testimonials_select,  2, :disabled =>@page.testimonials_show==1 %>
+			<%= f.label :testimonials_select, 'Random', :value => 'Random' %>	
+	</div>
+
+</div>
+
+<% #content_for :javascripts, javascript_include_tag('refinery/page-image-picker') 
+%>

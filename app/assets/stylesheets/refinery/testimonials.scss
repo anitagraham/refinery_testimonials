@@ -1,0 +1,32 @@
+
+#page_testimonials_picker {
+  // background-color: #333;
+  input[type=radio] {
+    float: left;
+    width: 0px;
+    opacity: 0;
+    height: 0px;}
+    label { display:inline-block}
+ 
+   input[type=radio] + label:before {
+   border: 1px solid black;
+    content: "\00a0";
+    display: inline-block;
+    font: 16px/1em sans-serif;
+    height: 16px;
+    margin: 0 .25em 0 0;
+    padding:0;
+    vertical-align: top;
+    width: 16px;
+  }
+  input[type=radio]:checked + label:before {
+    background: black;
+    color: #666;
+    content: "\2713";
+    text-align: center;
+  }
+  input[type=radio]:checked + label:after {
+    font-weight: bold;
+  }
+}
+

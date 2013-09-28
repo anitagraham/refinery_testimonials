@@ -1,0 +1,12 @@
+<% logger.debug "--------- Displaying Testimonials ------------" %>
+	<% unless @testimonials.nil? %>
+	  <ul class="testimonials">
+	  	<%= render @testimonials %>
+	  </ul>
+	<%else%>
+		logger.debug "=========== No Testimonials found. ============="
+	<% end %>
+
+
+ 
+

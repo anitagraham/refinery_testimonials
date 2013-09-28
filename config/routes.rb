@@ -1,7 +1,19 @@
-ActionController::Routing::Routes.draw do |map|
-  map.resources :testimonials, :only => [:index]
+Refinery::Core::Engine.routes.append do
 
-  map.namespace(:admin, :path_prefix => 'refinery') do |admin|
-    admin.resources :testimonials
+  # Frontend routes
+  namespace :testimonials do
+    resources :testimonials, :path => '', :only => [:index, :show]
   end
+
+  # Admin routes
+  namespace :testimonials, :path => '' do
+    namespace :admin, :path => 'refinery' do
+      resources :testimonials, :except => :show do
+        collection do
+          post :update_positions
+        end
+      end
+    end
+  end
+
 end
