@@ -1,9 +1,0 @@
-<% content_for :testimonials do %>
-	<% if @testimonials.count > 0 %>
-	  <ul class="testimonials">
-	  	<%= render @testimonials %>
-	  </ul>
-	<%else%>
-		logger.debug "=========== No Testimonials found. ============="
-	<% end %>
-<%end%>

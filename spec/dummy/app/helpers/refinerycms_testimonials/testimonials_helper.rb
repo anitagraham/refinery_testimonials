@@ -1,0 +1,2 @@
+module RefinerycmsTestimonials::TestimonialsHelper
+end

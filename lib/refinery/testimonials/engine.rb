@@ -11,6 +11,10 @@ module Refinery
         tab.partial = "/refinery/testimonials/admin/testimonials/tabs/testimonials"
       end
 
+      before_inclusion do
+        Refinery::AdminController.send :helper, Refinery::Admin::TestimonialsHelper
+      end
+
       initializer "register refinerycms_testimonials plugin" do
         Refinery::Plugin.register do |plugin|
           plugin.name = "testimonials"
@@ -20,13 +24,13 @@ module Refinery
             :class_name => :'refinery/testimonials/testimonial',
             :title => 'name'
           }
-          
         end
       end
       
       config.to_prepare do
         require 'refinerycms-pages'
-        Refinery::Page.send :page_fields
+        # puts "========= Sending testimonials control page relationship ============"
+        Refinery::Page.send :testimonials_relationships
       end
 
       config.after_initialize do

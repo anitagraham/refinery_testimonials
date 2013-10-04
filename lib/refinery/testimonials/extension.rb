@@ -1,7 +1,7 @@
 module Refinery
   module Testimonials
     module Extension
-      def page_fields
+      def testimonials_relationships
         attr_accessible :testimonials_show, :testimonials_count, :testimonials_select
       end
     end

@@ -13,7 +13,6 @@ class CreateTestimonials < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :refinery_testinmonials, :id
 
   end
 

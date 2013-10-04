@@ -46,13 +46,13 @@
   </div>
   
   <div class='field'>
-    <%= f.label :received_on %>
-    <%= f.date_select :received_on  %>
+    <%= f.label :received_date %>
+    <%= f.date_select :received_date, :order => [:day, :month, :year], :prompt => true   %>
   </div>
 
 	<div class="field">
 		<%= f.label :received_channel %>
-		<%= f.collection_radio_buttons :received_channel, Refinery::Testimonials::Testimonial.CHANNELS)  %>
+		<%= f.select :received_channel, Refinery::Testimonials::Testimonial::CHANNELS  %>
 	</div>
 	  
   <div class='field'>
@@ -66,10 +66,4 @@
              :delete_title => t('delete', :scope => 'refinery.testimonials.admin.testimonials.testimonial'),
              :delete_confirmation => t('message', :scope => 'refinery.admin.delete', :title => @testimonial.name) %>
 <% end %>
-<% content_for :javascripts do %>
-  <script>
-    $(document).ready(function(){
-      page_options.init(false, '', '');
-    });
-  </script>
-<% end %>
+

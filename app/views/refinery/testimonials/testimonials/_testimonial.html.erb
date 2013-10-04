@@ -1,6 +1,11 @@
- <li class="testimonial">
+<li class="testimonial <%= testimonial.received_channel%>">
+  <span class="testimonial_date"><%=testimonial.received_date%></span>
   <blockquote>
     <p><%= raw(testimonial.quote) %></p>
-    <p><cite><%= testimonial.name %></cite></p>
-  </blockquote>
+      <cite>
+        <%= testimonial.name %>
+        <span class="testimonial_jobtitle"><%=testimonial.job_title%></span>  
+        <span class="testimonial_company"><%= link_to_unless testimonial.website.blank?, testimonial.company, testimonial.website  %></span>
+      </cite>
+    </blockquote>
 </li>

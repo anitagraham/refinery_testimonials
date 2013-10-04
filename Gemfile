@@ -68,5 +68,6 @@ group :assets do
   gem 'coffee-rails'
   gem 'uglifier'
 end
-
+gem 'nokogiri', '<1.6.0'
 gem 'jquery-rails', '~> 2.0.0'
+gem 'rabl'

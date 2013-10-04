@@ -4,17 +4,13 @@ Refinery::PagesController.class_eval do
   protected
    
     def get_testimonials
-    	logger.debug "=============== Get Testimonials Page Decorator ==============="
+        logger.debug "---------- Checking Testimonials---------------"     
       if @page.testimonials_show 
-      	@testimonials = Refinery::Testimonials::Testimonial.scoped
-       	logger.debug "=============== Testimonials found: #{@testimonials.count} ==============="
-       	
-       	@testimonials = page.testimonials_select=='Random' ? @testimonials.sample : @testimonials.recent
-       	@testimonials = @testimonials.limit(page.testimonials_count	) unless page.testimonials_count==0
-       	
-       	logger.debug "=============== Testimonials to display: #{@testimonials.count} ==============="
-      else 
-      	logger.debug "=============== Don't show testimonials on this page ==============="
+        @testimonials = Refinery::Testimonials::Testimonial.scoped
+        logger.debug "---------- There are  #{@testimonials.count} in total ---------------"
+        @testimonials = page.testimonials_select=='Random' ? @testimonials.sample : @testimonials.recent
+        @testimonials = @testimonials.limit(page.testimonials_count  ) unless page.testimonials_count==0
+        logger.debug "---------- Making #{@testimonials.count} available---------------"
       end
     end
 end
