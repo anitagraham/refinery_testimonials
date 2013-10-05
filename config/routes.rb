@@ -7,7 +7,7 @@ Refinery::Core::Engine.routes.append do
 
   # Admin routes
   namespace :testimonials, :path => '' do
-    namespace :admin, :path => 'refinery' do
+    namespace :admin, :path => 'refinery/testimonials' do
       resources :testimonials, :except => :show do
         collection do
           post :update_positions

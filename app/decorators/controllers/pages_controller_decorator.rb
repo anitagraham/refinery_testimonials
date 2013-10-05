@@ -1,10 +1,11 @@
 Refinery::PagesController.class_eval do
   append_before_filter :get_testimonials, :only => [:show]
+  puts "Appended before filter get_testimonials 2"
   
   protected
    
     def get_testimonials
-        logger.debug "---------- Checking Testimonials---------------"     
+      logger.debug "---------- Checking Testimonials---------------"     
       if @page.testimonials_show 
         @testimonials = Refinery::Testimonials::Testimonial.scoped
         logger.debug "---------- There are  #{@testimonials.count} in total ---------------"
