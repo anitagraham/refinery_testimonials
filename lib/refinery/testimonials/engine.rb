@@ -32,7 +32,6 @@ module Refinery
 
       config.after_initialize do
         Refinery.register_extension(Refinery::Testimonials)
-        puts "------------ Refinery::Testimonials Registered ----------"
         Refinery::Pages::Tab.register do |tab|
           register_testimonials tab
         end
