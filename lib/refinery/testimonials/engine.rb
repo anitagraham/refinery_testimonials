@@ -23,9 +23,9 @@ module Refinery
           }
         end
       end
-      
+
       config.to_prepare do
-        # Decorators.register! root
+        Decorators.register! root
         require 'refinerycms-pages'
         Refinery::Page.send :testimonial_fields
       end
