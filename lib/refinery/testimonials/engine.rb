@@ -26,6 +26,7 @@ module Refinery
 
       config.to_prepare do
         Decorators.register! Rails.root
+        puts "--------- decorators will be found below #{Rails.root}---------------"
         require 'refinerycms-pages'
         Refinery::Page.send :testimonial_fields
       end

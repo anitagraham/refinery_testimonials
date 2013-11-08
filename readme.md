@@ -1,10 +1,18 @@
-Testimonials plugin for RefineryCMS
+# Testimonials plugin for RefineryCMS
 http://github.com/resolve/Refinery
 
-This is a rebuild of the original refinerycms-testimonials. It works for Refinerycms 2.1
-The method of controlling the display of testimonials on pages has changed. 
+Version 2.0 is a rewrite of the original refinerycms-testimonials. It works for Refinerycms 2.1
+The method of controlling the display of testimonials on pages has changed.
 
+# How to install
 
+In your Gemfile, add the gem:
+
+```ruby
+gem 'refinerycms-testimonials', '~> 2.0'
+```
+
+Now, run `bundle install` and the gem should install.
 
 
 
