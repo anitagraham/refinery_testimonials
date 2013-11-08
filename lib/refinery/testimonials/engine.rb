@@ -1,4 +1,4 @@
-
+require 'decorators'
 module Refinery
   module Testimonials
     class Engine < Rails::Engine
