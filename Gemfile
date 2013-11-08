@@ -4,6 +4,7 @@ gemspec
 
 gem 'refinerycms', '~> 2.0.3'
 gem 'refinerycms-i18n', '~> 2.0.2'
+gem 'decorators', '~> 1.0.0'
 
 # Database Configuration
 platforms :jruby do
