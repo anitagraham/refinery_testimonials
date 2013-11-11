@@ -21,7 +21,7 @@ To install the migrations, run:
 Add Testimonials to the database
 ================================
 
-You can now add testimonials to the databasse through the Refinery CMS.
+You can now add testimonials to the database through the Refinery CMS.
 Each testimonial includes
 + quote (the actual testimonial)
 + name (of testimonial sender)
@@ -44,23 +44,23 @@ Changes to Layout Templates
 To display testimonials add <%= yield :testimonials unless @testimonials.nil? %> in a layout template.
 For example, in application.html.erb
 
-''''
+````
 <%=  yield :testimonials unless @testimonials.nil? %>
-''''
+````
 
 This will result in the following on your page
 
-''''
+````
 <section id="testimonials">
   <ul>
     <%= render @testimonials %>
   </ul>
 </section>
-''''
+````
 
 In this default setup a testimonial will be a list item thus:
 
-''''
+````
 <li class="testimonial <%= testimonial.received_channel%>">
   <span class="testimonial_date"><%=testimonial.received_date%></span>
   <blockquote>
@@ -72,6 +72,6 @@ In this default setup a testimonial will be a list item thus:
       </cite>
     </blockquote>
 </li>
-''''
+````
 
 
