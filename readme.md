@@ -30,18 +30,18 @@ Each testimonial includes
 + jobtitle ( ditto )
 + received_channel (letter, email, facebook, twitter)
 
-Display Testimonials on a page
-==============================
+Control Testimonial display on a page
+=====================================
 Each page now has a testimonials tab which can be used to set how testimonials should be displayed on that page
 
-+ Show Testimonials on this page (default:  no)
-+ How many testimonials to show (n, 0 means show all)
-+ How to select and order which testimonials to show (Random, Most Recent First)
++ Show Testimonials on this page (default:  __no__)
++ How many testimonials to show (n, __0__ means show all)
++ How to select and order which testimonials to show (Random, __Most Recent First__)
 
 
 Changes to Layout Templates
 ====================================
-To display testimonials add <%= yield :testimonials unless @testimonials.nil? %> in a layout template.
+To display testimonials add `<%= yield :testimonials unless @testimonials.nil? %>` in a layout template.
 For example, in application.html.erb
 
 ````ruby
@@ -73,5 +73,15 @@ In this default setup a testimonial will be a list item thus:
     </blockquote>
 </li>
 ````
+
+For more control over what is displayed you can render the @testimonials collection yourself.
+
+````ruby
+<%= render "shared/testimonials", :mustache=>{:testimonials => @testimonials.as_json({:root =>true})}   %>
+````
+
+should return
+
+
 
 

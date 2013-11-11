@@ -4,7 +4,7 @@ gemspec
 
 gem 'refinerycms', '~> 2.0.3'
 gem 'refinerycms-i18n', '~> 2.0.2'
-gem 'decorators', '~> 1.0.0'
+gem 'active_model_serializers'
 
 # Database Configuration
 platforms :jruby do
@@ -17,7 +17,7 @@ end
 platforms :ruby do
   gem 'sqlite3'
   gem 'mysql2'
-  gem 'pg'
+  # gem 'pg'
 end
 
 group :development, :test do
