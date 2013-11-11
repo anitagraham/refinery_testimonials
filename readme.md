@@ -44,13 +44,13 @@ Changes to Layout Templates
 To display testimonials add <%= yield :testimonials unless @testimonials.nil? %> in a layout template.
 For example, in application.html.erb
 
-````
+````ruby
 <%=  yield :testimonials unless @testimonials.nil? %>
 ````
 
 This will result in the following on your page
 
-````
+````HTML+ERB
 <section id="testimonials">
   <ul>
     <%= render @testimonials %>
@@ -60,7 +60,7 @@ This will result in the following on your page
 
 In this default setup a testimonial will be a list item thus:
 
-````
+````HTML+ERB
 <li class="testimonial <%= testimonial.received_channel%>">
   <span class="testimonial_date"><%=testimonial.received_date%></span>
   <blockquote>
