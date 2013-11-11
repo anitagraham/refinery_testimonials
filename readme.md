@@ -1,8 +1,7 @@
 # Testimonials plugin for RefineryCMS
 http://github.com/resolve/Refinery
 
-Version 2.0 is a rewrite of the original refinerycms-testimonials. It works for Refinerycms 2.1
-The method of controlling the display of testimonials on pages has changed.
+Version 2.0 is a rewrite of the original refinerycms-testimonials. It is compatible with Refinerycms 2.1
 
 # How to install
 
@@ -14,22 +13,65 @@ gem 'refinerycms-testimonials', '~> 2.0'
 
 Now, run `bundle install` and the gem should install.
 
+To install the migrations, run:
+
+    rails generate refinery:testimonials
+    rake db:migrate
+
+Add Testimonials to the database
+================================
+
+You can now add testimonials to the databasse through the Refinery CMS.
+Each testimonial includes
++ quote (the actual testimonial)
++ name (of testimonial sender)
++ company ( ditto )
++ website ( ditto )
++ jobtitle ( ditto )
++ received_channel (letter, email, facebook, twitter)
+
+Display Testimonials on a page
+==============================
+Each page now has a testimonials tab which can be used to set how testimonials should be displayed on that page
+
++ Show Testimonials on this page (default:  no)
++ How many testimonials to show (n, 0 means show all)
++ How to select and order which testimonials to show (Random, Most Recent First)
 
 
-Show a Random Testimonial On Any Page
-=====================================
-If like us you wish to show a random testimonial on pages you need to follow these
-two basic steps:
+Changes to Layout Templates
+====================================
+To display testimonials add <%= yield :testimonials unless @testimonials.nil? %> in a layout template.
+For example, in application.html.erb
 
-1. Add <%= display_page_testimonial_if_setup %> into your layout where you would like to display them
-   -> We've put ours in the sidebar under shared/_content_page.html.erb
+''''
+<%=  yield :testimonials unless @testimonials.nil? %>
+''''
 
-2. Change the 'show_testimonials_on_pages' setting in the backend, there are three options:
-   -> all  # Show one on every page (except testimonials)
-   -> none # Turn off the random testimonial on all pages
-   -> comma seperated list of page titles you want them on, i.e: news, contact us, home
+This will result in the following on your page
+
+''''
+<section id="testimonials">
+  <ul>
+    <%= render @testimonials %>
+  </ul>
+</section>
+''''
+
+In this default setup a testimonial will be a list item thus:
+
+''''
+<li class="testimonial <%= testimonial.received_channel%>">
+  <span class="testimonial_date"><%=testimonial.received_date%></span>
+  <blockquote>
+    <p><%= raw(testimonial.quote) %></p>
+      <cite>
+        <%= testimonial.name %>
+        <span class="testimonial_jobtitle"><%=testimonial.job_title%></span>
+        <span class="testimonial_company"><%= link_to_unless testimonial.website.blank?, testimonial.company, testimonial.website  %></span>
+      </cite>
+    </blockquote>
+</li>
+''''
 
 
-If you want to run the tests add the following to environments/test.rb
-config.gem "thoughtbot-shoulda", :lib => "shoulda", :source => "http://gems.github.com"
-config.gem "mocha"
