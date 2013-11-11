@@ -82,7 +82,7 @@ For more control over what is displayed you can render the @testimonials collect
 
 producing
 
-''''json
+''''JSON
 "testimonials" : [
 [0]{
   "company" : "Client Company",
