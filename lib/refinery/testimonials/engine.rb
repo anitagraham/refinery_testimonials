@@ -1,4 +1,3 @@
-require 'decorators'
 module Refinery
   module Testimonials
     class Engine < Rails::Engine
@@ -12,7 +11,7 @@ module Refinery
         tab.partial = "/refinery/testimonials/admin/testimonials/tabs/testimonials"
       end
 
-      initializer "register refinerycms-testimonials plugin" do
+      before_inclusion do
         Refinery::Plugin.register do |plugin|
           plugin.name = "testimonials"
           plugin.url = proc { Refinery::Core::Engine.routes.url_helpers.testimonials_admin_testimonials_path }
@@ -25,8 +24,6 @@ module Refinery
       end
 
       config.to_prepare do
-        Decorators.register! Rails.root
-        puts "--------- decorators will be found below #{Rails.root}---------------"
         require 'refinerycms-pages'
         Refinery::Page.send :testimonial_fields
       end
