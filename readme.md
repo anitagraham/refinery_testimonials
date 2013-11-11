@@ -82,7 +82,7 @@ For more control over what is displayed you can render the @testimonials collect
 
 producing
 
-''''JSON
+````JSON
 "testimonials" : [
 [0]{
   "company" : "Client Company",
@@ -97,11 +97,11 @@ producing
   "updated_at" : "Sat, 05 Oct 2013 22:04:41 CST +09:30",
   "website" : "www.clientcompany.com"
 }]
-''''
+````
 
 will allow you to use a mustache template to render the parts of the testimonial you want displayed.
 
-''''
+````
 <section id="testimonials">
   <ul>
     {{#testimonials}}
@@ -117,7 +117,7 @@ will allow you to use a mustache template to render the parts of the testimonial
     {{/testimonials}}
   </ul>
 </section>
-''''
+````
 
 
 
