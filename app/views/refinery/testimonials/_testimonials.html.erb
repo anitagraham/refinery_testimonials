@@ -1,7 +1,9 @@
 <% content_for :testimonials do %>
-  <section id="testimonials">
-    <ul>
-      <%= render @testimonials %>
-    </ul>
-  </section>
+  <% unless @testimonials.nil? do %>
+    <section id="testimonials">
+      <ul>
+        <%= render @testimonials %>
+      </ul>
+    </section>
+  <%end%>
 <%end%>

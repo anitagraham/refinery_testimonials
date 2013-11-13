@@ -32,7 +32,7 @@ Each testimonial includes
 
 ##Control Testimonial display on a page
 
-Each page now has a testimonials tab which can be used to set how testimonials should be displayed on that page
+Each page now has a testimonials tab which can be used to decide how testimonials should be displayed on that page
 
 + Show Testimonials on this page (default:  __no__)
 + How many testimonials to show (n, __0__ means show all)
@@ -41,11 +41,11 @@ Each page now has a testimonials tab which can be used to set how testimonials s
 
 ## Changes to Layout Templates
 
-To display testimonials add `<%= yield :testimonials unless @testimonials.nil? %>` in a layout template.
+To display testimonials add `<%= yield :testimonials %>` in a layout template.
 For example, in application.html.erb
 
 ````ruby
-<%=  yield :testimonials unless @testimonials.nil? %>
+<%=  yield :testimonials %>
 ````
 
 This will result in the following on your page
@@ -74,7 +74,7 @@ In this default setup a testimonial will be a list item thus:
 </li>
 ````
 
-For more control over what is displayed you can render the @testimonials collection yourself as html or, as shown below, as json.
+For more control over what is displayed you can render the @testimonials collection yourself as html or json.
 
 ````ruby
 <%= render "shared/testimonials", :mustache=>{:testimonials => @testimonials.as_json}   %>
@@ -97,26 +97,6 @@ producing
   "updated_at" : "Sat, 05 Oct 2013 22:04:41 CST +09:30",
   "website" : "www.clientcompany.com"
 }]
-````
-
-will allow you to use a mustache template to render the parts of the testimonial you want displayed.
-
-````
-<section id="testimonials">
-  <ul>
-    {{#testimonials}}
-    <li>
-      <span class="date">{{received_date}}</span>
-      <blockquote>
-        {{{quote}}}
-        <cite>
-          {{name}}
-        </cite>
-      </blockquote>
-    </li>
-    {{/testimonials}}
-  </ul>
-</section>
 ````
 
 
