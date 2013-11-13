@@ -1,5 +1,5 @@
 <% content_for :testimonials do %>
-  <% unless @testimonials.nil? do %>
+  <% if @testimonials %>
     <section id="testimonials">
       <ul>
         <%= render @testimonials %>

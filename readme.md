@@ -22,7 +22,7 @@ To install the migrations, run:
 
 
 You can now add testimonials to the database through the Refinery CMS.
-Each testimonial includes
+The testimonials fields are
 + quote (the actual testimonial)
 + name (of testimonial sender)
 + company ( ditto )
@@ -48,57 +48,7 @@ For example, in application.html.erb
 <%=  yield :testimonials %>
 ````
 
-This will result in the following on your page
-
-````HTML+ERB
-<section id="testimonials">
-  <ul>
-    <%= render @testimonials %>
-  </ul>
-</section>
-````
-
-In this default setup a testimonial will be a list item thus:
-
-````HTML+ERB
-<li class="testimonial <%= testimonial.received_channel%>">
-  <span class="testimonial_date"><%=testimonial.received_date%></span>
-  <blockquote>
-    <p><%= raw(testimonial.quote) %></p>
-      <cite>
-        <%= testimonial.name %>
-        <span class="testimonial_jobtitle"><%=testimonial.job_title%></span>
-        <span class="testimonial_company"><%= link_to_unless testimonial.website.blank?, testimonial.company, testimonial.website  %></span>
-      </cite>
-    </blockquote>
-</li>
-````
-
-For more control over what is displayed the @testimonials collection is available for you to render as html or json. For example:
-
-````ruby
-<%= render "shared/testimonials", :mustache=>{:testimonials => @testimonials.as_json}   %>
-````
-
-where "shared/testimonials" is a mustache template you supply. The JSON produced will have this structure.
-
-````JSON
-"testimonials" : [
-[0]{
-  "company" : "Client Company",
-  "created_at" : "Sat, 05 Oct 2013 22:04:41 CST +09:30",
-  "id" : "1",
-  "job_title" : "manager",
-  "name" : "Jo Jones",
-  "position" : "nil",
-  "quote" : "<p>We liked your work</p> ",
-  "received_channel" : "Email",
-  "received_date" : "Tue, 01 Mar 2011",
-  "updated_at" : "Sat, 05 Oct 2013 22:04:41 CST +09:30",
-  "website" : "www.clientcompany.com"
-}]
-````
-
+For more control over what is displayed the @testimonials collection is available for you to render as html or json.
 
 
 
