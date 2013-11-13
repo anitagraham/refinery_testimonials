@@ -74,13 +74,13 @@ In this default setup a testimonial will be a list item thus:
 </li>
 ````
 
-For more control over what is displayed you can render the @testimonials collection yourself as html or json.
+For more control over what is displayed the @testimonials collection is available for you to render as html or json. For example:
 
 ````ruby
 <%= render "shared/testimonials", :mustache=>{:testimonials => @testimonials.as_json}   %>
 ````
 
-producing
+where "shared/testimonials" is a mustache template you supply. The JSON produced will have this structure.
 
 ````JSON
 "testimonials" : [
