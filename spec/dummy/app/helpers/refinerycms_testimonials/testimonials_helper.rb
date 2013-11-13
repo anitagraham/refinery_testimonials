@@ -1,2 +1,4 @@
-module RefinerycmsTestimonials::TestimonialsHelper
+module RefinerycmsTestimonials
+  module TestimonialsHelper
+  end
 end

@@ -9,7 +9,11 @@ en:
          testimonials:
           records:
             title: Testimonials
-            no_items_yet: There are no Testimonials yet. 
+            no_items_yet: There are no testimonials yet.
+            create_new: Add New Testimonial
+            reorder: Reorder testimonials
+            reorder_done: Done reordering testimonials
+
           testimonial:
             edit: Edit this testimonial
             delete: Remove this testimonial forever
