@@ -1,100 +1,414 @@
 # encoding: utf-8
-require 'spec_helper'
+require "spec_helper"
+require 'i18n'
 
-describe Refinery do
-  describe 'Testimonials' do
-    describe 'Admin' do
-      describe 'testimonials' do
-        login_refinery_user
+# def new_window_should_have_content(content)
+  # new_window = page.driver.browser.window_handles.last
+  # page.within_window new_window do
+    # expect(page).to have_content(content)
+  # end
+# end
+#
+# def new_window_should_not_have_content(content)
+  # new_window = page.driver.browser.window_handles.last
+  # page.within_window new_window do
+    # expect(page).to_not have_content(content)
+  # end
+# end
 
-        describe 'testimonials list' do
+  def fckeditor_fill_in(id, params = {})
+    page.execute_script %Q{
+      var ckeditor = CKEDITOR.instances.#{id}
+      ckeditor.setData('#{params[:with]}')
+      ckeditor.focus()
+      ckeditor.updateElement()
+    }
+  end
+
+
+module Refinery
+  module Admin
+    describe "Testimonials" do
+      login_refinery_user
+
+      context "when no testimonials" do
+        it "Says no items yet" do
+          visit refinery.testimonials_testimonials_admin_testimonials_path
+
+          expect(page).to have_content(::I18n.t('no_items_yet', :scope => 'refinery.testimonials.admin.testimonials.records'))
+        end
+
+        it "doesn't show reorder testimonials link" do
+          visit refinery.testimonials_admin_testimonials_path
+
+          within "#actions" do
+            expect(page).to have_no_content(::I18n.t('reorder', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+            expect(page).to have_no_selector("a[href='/refinery/testimonials/testimonials']")
+          end
+        end
+      end
+
+      describe "action links" do
+        it "shows add new testimonial link" do
+          visit refinery.testimonials_testimonials_admin_testimonials_path
+
+          within "#actions" do
+            expect(page).to have_content(::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+            expect(page).to have_selector("a[href='/refinery/testimonials/testimonials/new']")
+          end
+        end
+
+
+        context "when some testimonials exist" do
+          before { 2.times { |i| Testimonials::Testimonial.create :name => "Testimonial #{i}", :quote=>'quote' } }
+
+          it "shows reorder testimonials link" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            within "#actions" do
+              expect(page).to have_content(::I18n.t('reorder', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+              expect(page).to have_selector("a[href='/refinery/testimonials/testimonials']")
+            end
+          end
+        end
+      end
+
+      describe "new/create" do
+        it "allows a testimonial to be created" do
+          visit refinery.testimonials_admin_testimonials_path
+
+          click_link ::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions')
+
+          fill_in "Name", :with => "My first testimonial"
+          sleep 5
+          within_frame('WYMeditor_0'){  fill_in "quote", :with => "Quote" }
+          click_button "Save"
+
+          expect(page).to have_content("'My first testimonial' was successfully added.")
+
+          expect(page.body).to have_content(/Remove this testimonial forever/)
+          expect(page.body).to have_content(/Edit this testimonial/)
+          expect(page.body).to have_content(%r{/refinery/testimonials/my-first-testimonial/edit})
+          expect(page.body).to have_content(%r{href="/my-first-testimonial"})
+
+          expect(Refinery::Testimonial.count).to have_value(1)
+        end
+
+
+      end
+
+      describe "edit/update" do
+        before do
+          Testimonial.create :name => "Update me"
+
+          visit refinery.testimonials_admin_testimonials_path
+          expect(page).to have_content("Update me")
+        end
+
+        context 'when saving and returning to index' do
+          it "updates testimonial" do
+            click_link "Edit this testimonial"
+
+            fill_in "Name", :with => "Updated"
+            click_button "Save"
+
+            expect(page).to have_content("'Updated' was successfully updated.")
+          end
+        end
+      end
+
+      describe "destroy" do
+        context "when testimonial can be deleted" do
+          before { Testimonial.create :name => "Delete me" }
+
+          it "will show delete button" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            click_link "Remove this testimonial forever"
+
+            expect(page).to have_content("'Delete me' was successfully removed.")
+
+            Refinery::Testimonial.count.should == 0
+          end
+        end
+
+        context "when testimonial can't be deleted" do
+          before { Testimonial.create :name => "Indestructible", :deletable => false }
+
+          it "wont show delete button" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            expect(page).to have_no_content("Remove this page forever")
+            expect(page).to have_no_selector("a[href='/refinery/testimonials/indestructible']")
+          end
+        end
+      end
+
+      context "duplicate testimonial names" do
+        before { Testimonial.create :name => "I was here first" }
+
+        it "will append nr to url path" do
+          visit refinery.new_admin_testimonial_path
+
+          fill_in "Name", :with => "I was here first"
+          click_button "Save"
+
+          Refinery::Testimonial.last.url[:path].should == ["i-was-here-first--2"]
+        end
+      end
+
+      context "with translations" do
+        before do
+          Refinery::I18n.stub(:frontend_locales).and_return([:en, :ru])
+
+          # Create a home page in both locales (needed to test menus)
+          home_page = FactoryGirl.create(:page, :name => 'Home',
+          :link_url => '/',
+          :menu_match => "^/$")
+          Globalize.locale = :ru
+          home_page.name = 'Домашняя страница'
+          home_page.save
+          Globalize.locale = :en
+        end
+
+        describe "add a testimonial with name for default locale" do
           before do
-            FactoryGirl.create(:testimonial, :name => 'UniqueTitleOne', :quote => 'Quote')
-            FactoryGirl.create(:testimonial, :name => 'UniqueTitleTwo', :quote => 'Quote')
+            visit refinery.testimonials_admin_testimonials_path
+            click_link "Add new testimonial"
+            fill_in "Name", :with => "News"
+            click_button "Save"
           end
 
-          it 'shows two items' do
+          it "succeeds" do
+            expect(page).to have_content("'News' was successfully added.")
+            Refinery::Testimonial.count.should == 2
+          end
+
+          it "shows locale flag for testimonial" do
+            p = ::Refinery::Testimonial.by_slug('news').first
+            within "#page_#{p.id}" do
+              expect(page).to have_css("img[src='/assets/refinery/icons/flags/en.png']")
+            end
+          end
+
+          it "shows name in the admin menu" do
+            p = ::Refinery::Testimonial.by_slug('news').first
+            within "#page_#{p.id}" do
+              expect(page).to have_content('News')
+              page.find_link('Edit this page')[:href].should include('news')
+            end
+          end
+
+        end
+
+        describe "add a testimonial with name for both locales" do
+          let(:en_page_name) { 'News' }
+          let(:en_page_slug) { 'news' }
+          let(:ru_page_name) { 'Новости' }
+          let(:ru_page_slug) { 'новости' }
+          let(:ru_page_slug_encoded) { '%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8' }
+          let!(:news_page) do
+            Refinery::I18n.stub(:frontend_locales).and_return([:en, :ru])
+
+            _page = Globalize.with_locale(:en) {
+              Testimonial.create :name => en_page_name
+            }
+            Globalize.with_locale(:ru) do
+              _page.name = ru_page_name
+              _page.save
+            end
+
+            _page
+          end
+
+          it "succeeds" do
+            news_page.destroy!
             visit refinery.testimonials_admin_testimonials_path
-            page.should have_content('UniqueTitleOne')
-            page.should have_content('UniqueTitleTwo')
+
+            click_link "Add new page"
+            within "#switch_locale_picker" do
+              click_link "Ru"
+            end
+            fill_in "Name", :with => ru_page_name
+            click_button "Save"
+
+            within "#page_#{Testimonial.last.id}" do
+              click_link "Application_edit"
+            end
+            within "#switch_locale_picker" do
+              click_link "En"
+            end
+            fill_in "Name", :with => en_page_name
+            click_button "Save"
+
+            expect(page).to have_content("'#{en_page_name}' was successfully updated.")
+            Refinery::Testimonial.count.should == 2
+          end
+
+          it "shows both locale flags for page" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            within "#page_#{news_page.id}" do
+              expect(page).to have_css("img[src='/assets/refinery/icons/flags/en.png']")
+              expect(page).to have_css("img[src='/assets/refinery/icons/flags/ru.png']")
+            end
+          end
+
+          it "shows name in admin menu in current admin locale" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            within "#page_#{news_page.id}" do
+              expect(page).to have_content(en_page_name)
+            end
+          end
+
+          it "uses the slug from the default locale in admin" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            within "#page_#{news_page.id}" do
+              page.find_link('Edit this page')[:href].should include(en_page_slug)
+            end
+          end
+
+          it "shows correct language and slugs for default locale" do
+            visit "/"
+
+            within "#menu" do
+              page.find_link(news_page.name)[:href].should include(en_page_slug)
+            end
+          end
+
+          it "shows correct language and slugs for second locale" do
+            visit "/ru"
+
+            within "#menu" do
+              page.find_link(ru_page_name)[:href].should include(ru_page_slug_encoded)
+            end
           end
         end
 
-        describe 'create' do
+        describe "add a testimonial with name only for secondary locale" do
+          let(:ru_testimonial) {
+            Globalize.with_locale(:ru) {
+              Testimonial.create :name => ru_testimonial_name
+            }
+          }
+          let(:ru_testimonial_id) { ru_testimonial.id }
+          let(:ru_testimonial_name) { 'Новости' }
+          let(:ru_testimonial_slug) { 'новости' }
+
           before do
+            ru_testimonial
             visit refinery.testimonials_admin_testimonials_path
-
-            click_link 'Add New Testimonial'
           end
 
-          context 'valid data' do
-            it 'should succeed' do
-              fill_in 'Name', :with => 'This is a test of the first string field'
-              click_button 'Save'
+          it "succeeds" do
+            ru_testimonial.destroy!
+            click_link "Add new testimonial"
+            within "#switch_locale_picker" do
+              click_link "Ru"
+            end
+            fill_in "Name", :with => ru_testimonial_name
+            click_button "Save"
 
-              page.should have_content("'This is a test of the first string field' was successfully added.")
-              Refinery::Testimonials::Testimonial.count.should == 1
+            expect(page).to have_content("'#{ru_testimonial_name}' was successfully added.")
+            Refinery::Testimonial.count.should == 2
+          end
+
+          it "shows locale flag for testimonial" do
+            within "#page_#{ru_page_id}" do
+              expect(page).to have_css("img[src='/assets/refinery/icons/flags/ru.png']")
             end
           end
 
-          context 'invalid data' do
-            it 'should fail' do
-              click_button 'Save'
-
-              page.should have_content("Name can't be blank")
-              Refinery::Testimonials::Testimonial.count.should == 0
+          it "doesn't show locale flag for primary locale" do
+            within "#page_#{ru_page_id}" do
+              expect(page).to_not have_css("img[src='/assets/refinery/icons/flags/en.png']")
             end
           end
 
-          context 'duplicate' do
-            before { FactoryGirl.create(:testimonial, :name => 'UniqueTitle') }
-
-            it 'should fail' do
-              visit refinery.testimonials_admin_testimonials_path
-
-              click_link 'Add New Testimonial'
-
-              fill_in 'Name', :with => 'UniqueTitle'
-              click_button 'Save'
-
-              page.should have_content('There were problems')
-              Refinery::Testimonials::Testimonial.count.should == 1
+          it "shows name in the admin menu" do
+            within "#page_#{ru_page_id}" do
+              testimonial.should have_content(ru_testimonial_name)
             end
           end
 
-        end
-
-        describe 'edit' do
-          before { FactoryGirl.create(:testimonial, :name => 'A name') }
-
-          it 'should succeed' do
-            visit refinery.testimonials_admin_testimonials_path
-
-            within '.actions' do
-              click_link 'Edit this testimonial'
+          it "uses id instead of slug in admin" do
+            within "#page_#{ru_page_id}" do
+              page.find_link('Edit this testimonial')[:href].should include(ru_testimonial_id.to_s)
             end
-
-            fill_in 'Name', :with => 'A different name'
-            click_button 'Save'
-
-            page.should have_content("'A different name' was successfully updated.")
-            page.should have_no_content('A name')
           end
-        end
 
-        describe 'destroy' do
-          before { FactoryGirl.create(:testimonial, :name => 'UniqueTitleOne') }
+          it "shows in frontend menu for 'ru' locale" do
+            visit "/ru"
 
-          it 'should succeed' do
-            visit refinery.testimonials_admin_testimonials_path
+            within "#menu" do
+              expect(page).to have_content(ru_testimonial_name)
+              expect(page).to have_css('a', :href => ru_testimonial_slug)
+            end
+          end
 
-            click_link 'Remove this testimonial forever'
+          it "won't show in frontend menu for 'en' locale" do
+            visit "/"
 
-            page.should have_content("'UniqueTitleOne' was successfully removed.")
-            Refinery::Testimonials::Testimonial.count.should == 0
+            within "#menu" do
+            # we should only have the home page in the menu
+              expect(page).to have_css('li', :count => 1)
+            end
           end
         end
+      end
 
+      describe "TranslateTestimonials" do
+        login_refinery_translator
+
+        describe "add testimonial to main locale" do
+          it "doesn't succeed" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            click_link "Add new testimonial"
+
+            fill_in "Name", :with => "Huh?"
+            click_button "Save"
+
+            expect(page).to have_content("You do not have the required permission to modify testimonials in this language")
+          end
+        end
+
+        describe "add testimonial to second locale" do
+          before do
+            Refinery::I18n.stub(:frontend_locales).and_return([:en, :lv])
+            Testimonial.create :name => 'First Testimonial'
+          end
+
+          it "succeeds" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            click_link "Add new testimonial"
+
+            within "#switch_locale_picker" do
+              click_link "Lv"
+            end
+            fill_in "Name", :with => "Brīva vieta reklāmai"
+            click_button "Save"
+
+            expect(page).to have_content("'Brīva vieta reklāmai' was successfully added.")
+            Refinery::Testimonial.count.should == 2
+          end
+        end
+
+        describe "delete testimonial from main locale" do
+          before { Testimonial.create :name => 'Default Testimonial' }
+
+          it "doesn't succeed" do
+            visit refinery.testimonials_admin_testimonials_path
+
+            click_link "Remove this testimonial forever"
+
+            expect(page).to have_content("You do not have the required permission to modify testimonials in this language.")
+            Refinery::Testimonial.count.should == 1
+          end
+        end
       end
     end
   end

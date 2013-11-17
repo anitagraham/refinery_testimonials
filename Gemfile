@@ -31,6 +31,7 @@ group :development, :test do
     gem 'guard-rspec'
   end
 
+  gem 'capybara-webkit'
   gem 'launchy'
   gem 'refinerycms-testing', '~> 2.0.3'
   gem 'rspec-rails'
