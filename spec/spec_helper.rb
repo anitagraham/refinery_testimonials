@@ -9,8 +9,11 @@ def setup_environment
     require File.expand_path('../../../../../config/environment', __FILE__)
   end
 
+  require 'rack/utils'
   require 'rspec/rails'
   require 'capybara/rspec'
+  Capybara.javascript_driver = :webkit
+  Capybara.app = Rack::ShowExceptions.new(Dummy::Application)
 
   Rails.backtrace_cleaner.remove_silencers!
 
