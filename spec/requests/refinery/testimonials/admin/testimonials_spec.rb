@@ -2,29 +2,23 @@
 require "spec_helper"
 require 'i18n'
 
-# def new_window_should_have_content(content)
-  # new_window = page.driver.browser.window_handles.last
-  # page.within_window new_window do
-    # expect(page).to have_content(content)
-  # end
-# end
-#
-# def new_window_should_not_have_content(content)
-  # new_window = page.driver.browser.window_handles.last
-  # page.within_window new_window do
-    # expect(page).to_not have_content(content)
-  # end
-# end
 
-  def fckeditor_fill_in(id, params = {})
-    page.execute_script %Q{
-      var ckeditor = CKEDITOR.instances.#{id}
-      ckeditor.setData('#{params[:with]}')
-      ckeditor.focus()
-      ckeditor.updateElement()
-    }
+# Use add_testimonial when testing the online interface
+  def add_testimonial(from, quote)
+
+    click_link ::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions')
+      fill_in "Name", :with => from
+      sleep 5
+      html = "<p>#{quote}</p>"
+      page.evaluate_script("WYMeditor.INSTANCES[0].html(#{html})")  
+    click_button "Save" 
   end
-
+  
+# Use build_testimonial when testing ....  
+  def build_testimonial(from, quote)
+    Testimonials::Testimonial.create :name => "#{name} #{i}", :quote=>quote
+  end
+  
 
 module Refinery
   module Admin
@@ -60,7 +54,7 @@ module Refinery
 
 
         context "when some testimonials exist" do
-          before { 2.times { |i| Testimonials::Testimonial.create :name => "Testimonial #{i}", :quote=>'quote' } }
+          before { 2.times { |i| build_testimonial("Testimonial #{i}", "quote")} }
 
           it "shows reorder testimonials link" do
             visit refinery.testimonials_admin_testimonials_path
@@ -76,13 +70,7 @@ module Refinery
       describe "new/create" do
         it "allows a testimonial to be created" do
           visit refinery.testimonials_admin_testimonials_path
-
-          click_link ::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions')
-
-          fill_in "Name", :with => "My first testimonial"
-          sleep 5
-          within_frame('WYMeditor_0'){  fill_in "quote", :with => "Quote" }
-          click_button "Save"
+          add_testimonial("My first Testimonial", "quote")
 
           expect(page).to have_content("'My first testimonial' was successfully added.")
 
@@ -93,13 +81,11 @@ module Refinery
 
           expect(Refinery::Testimonial.count).to have_value(1)
         end
-
-
       end
 
       describe "edit/update" do
         before do
-          Testimonial.create :name => "Update me"
+          build_testimonial("Update me", "quote")
 
           visit refinery.testimonials_admin_testimonials_path
           expect(page).to have_content("Update me")
@@ -129,17 +115,6 @@ module Refinery
             expect(page).to have_content("'Delete me' was successfully removed.")
 
             Refinery::Testimonial.count.should == 0
-          end
-        end
-
-        context "when testimonial can't be deleted" do
-          before { Testimonial.create :name => "Indestructible", :deletable => false }
-
-          it "wont show delete button" do
-            visit refinery.testimonials_admin_testimonials_path
-
-            expect(page).to have_no_content("Remove this page forever")
-            expect(page).to have_no_selector("a[href='/refinery/testimonials/indestructible']")
           end
         end
       end
