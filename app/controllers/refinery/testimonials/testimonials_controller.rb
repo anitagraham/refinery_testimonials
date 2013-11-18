@@ -1,6 +1,6 @@
 module Refinery
   module Testimonials
-      class TestimonialsController < ::Refinery::AdminController
+      class TestimonialsController < ::Application::AdminController
       respond_to :json, :html
       end
     end

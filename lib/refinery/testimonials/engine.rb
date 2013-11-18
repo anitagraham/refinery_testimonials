@@ -8,16 +8,16 @@ module Refinery
 
       def self.register_testimonials(tab)
         tab.name = "testimonials"
-        tab.partial = "/refinery/testimonials/admin/testimonials/tabs/testimonials"
+        tab.partial = "/refinery/testimonials/admin/tabs/testimonials"
       end
 
       before_inclusion do
         Refinery::Plugin.register do |plugin|
           plugin.name = "testimonials"
-          plugin.url = proc { Refinery::Core::Engine.routes.url_helpers.testimonials_admin_testimonials_path }
+          plugin.url = proc { Refinery::Core::Engine.routes.url_helpers.admin_testimonials_path }
           plugin.pathname = root
           plugin.activity = {
-            :class_name => :'refinery/testimonials/testimonial',
+            :class_name => :'refinery/testimonial',
             :title => 'name'
           }
         end
