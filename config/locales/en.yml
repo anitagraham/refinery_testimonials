@@ -4,7 +4,6 @@ en:
       testimonials:
         title: Testimonials
         description: Create and manage Testimonials for your site
-    testimonials:
       admin:
          testimonials:
           records:

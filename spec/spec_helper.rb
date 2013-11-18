@@ -13,7 +13,7 @@ def setup_environment
   require 'rspec/rails'
   require 'capybara/rspec'
   Capybara.javascript_driver = :webkit
-  Capybara.app = Rack::ShowExceptions.new(Dummy::Application)
+  # Capybara.app = Rack::ShowExceptions.new(Dummy::Application)
 
   Rails.backtrace_cleaner.remove_silencers!
 

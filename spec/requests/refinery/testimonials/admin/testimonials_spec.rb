@@ -6,7 +6,7 @@ require 'i18n'
 
 def add_testimonial(from, quote)
 
-  click_link ::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions')
+  click_link ::I18n.t('create_new', :scope => 'refinery.admin.testimonials.actions')
   fill_in "Name", :with => from
   # sleep 5
   html = '<p>#{quote}</p>'
@@ -27,16 +27,17 @@ module Refinery
 
       context "When there are no testimonials" do
         it "Says no items yet" do
-          visit refinery.testimonials_admin_testimonials_path
 
-          expect(page).to have_content(::I18n.t('no_items_yet', :scope => 'refinery.testimonials.admin.testimonials.records'))
+          visit refinery.admin_testimonials_path
+          expect(page).to have_content(::I18n.t('no_items_yet', :scope => 'refinery.admin.testimonials.records'))
+
         end
 
         it "doesn't show reorder testimonials link" do
-          visit refinery.testimonials_admin_testimonials_path
+          visit refinery.admin_testimonials_path
 
           within "#actions" do
-            expect(page).to have_no_content(::I18n.t('reorder', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+            expect(page).to have_no_content(::I18n.t('reorder', :scope => 'refinery.admin.testimonials.actions'))
             expect(page).to have_no_selector("a[href='/refinery/testimonials/testimonials']")
           end
         end
@@ -44,10 +45,10 @@ module Refinery
 
       describe "action links" do
         it "shows add new testimonial link" do
-          visit refinery.testimonials_admin_testimonials_path
+          visit refinery.admin_testimonials_path
 
           within "#actions" do
-            expect(page).to have_content(::I18n.t('create_new', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+            expect(page).to have_content(::I18n.t('create_new', :scope => 'refinery.admin.testimonials.actions'))
             expect(page).to have_selector("a[href='/refinery/testimonials/testimonials/new']")
           end
         end
@@ -56,10 +57,10 @@ module Refinery
           before { 2.times { |i| build_testimonial("Testimonial #{i}", "quote")} }
 
           it "shows reorder testimonials link" do
-            visit refinery.testimonials_admin_testimonials_path
+            visit refinery.admin_testimonials_path
 
             within "#actions" do
-              expect(page).to have_content(::I18n.t('reorder', :scope => 'refinery.testimonials.admin.testimonials.actions'))
+              expect(page).to have_content(::I18n.t('reorder', :scope => 'refinery.admin.testimonials.actions'))
               expect(page).to have_selector("a[href='/refinery/testimonials/testimonials']")
             end
           end
@@ -68,7 +69,7 @@ module Refinery
 
       describe "new/create", :js => true do
         it "allows a testimonial to be created" do
-          visit refinery.testimonials_admin_testimonials_path
+          visit refinery.admin_testimonials_path
           add_testimonial("My first Testimonial", "Quote")
 
           expect(page).to have_content("'Quote by My first Testimonial' was successfully added.")
@@ -85,7 +86,7 @@ module Refinery
         before do
           build_testimonial("Update me", "quote")
 
-          visit refinery.testimonials_admin_testimonials_path
+          visit refinery.admin_testimonials_path
           expect(page).to have_content("Update me")
         end
 
@@ -108,15 +109,15 @@ module Refinery
           end
 
           it "Will show delete button" do
-            visit refinery.testimonials_admin_testimonials_path
+            visit refinery.admin_testimonials_path
             within ".record" do
-              expect(page.html).to include(::I18n.t('delete', :scope => 'refinery.testimonials.admin.testimonials.testimonial'))
+              expect(page.html).to include(::I18n.t('delete', :scope => 'refinery.admin.testimonials.testimonial'))
               expect(page).to have_selector("a[href='/refinery/testimonials/testimonials/1']")
             end
           end
 
           it "Will delete the testimonial" do
-            visit refinery.testimonials_admin_testimonials_path
+            visit refinery.admin_testimonials_path
             click_link "Remove this testimonial forever"
 
             expect(page).to have_content("'Quote by Delete me' was successfully removed.")
