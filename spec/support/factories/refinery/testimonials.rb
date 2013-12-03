@@ -1,7 +1,8 @@
 
 FactoryGirl.define do
   factory :testimonial, :class => Refinery::Testimonials::Testimonial do
-    sequence(:name) { |n| "refinery#{n}" }
+    name "Person Name"
+    quote "Like your work"
   end
 end
 

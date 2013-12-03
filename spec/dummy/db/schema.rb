@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131002031646) do
+ActiveRecord::Schema.define(:version => 20131128102960) do
 
   create_table "refinery_images", :force => true do |t|
     t.string   "image_mime_type"
@@ -50,9 +51,9 @@ ActiveRecord::Schema.define(:version => 20131002031646) do
   create_table "refinery_page_translations", :force => true do |t|
     t.integer  "refinery_page_id"
     t.string   "locale"
-    t.string   "menu_title"
     t.string   "title"
     t.string   "custom_slug"
+    t.string   "menu_title"
     t.string   "slug"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
@@ -76,8 +77,11 @@ ActiveRecord::Schema.define(:version => 20131002031646) do
     t.integer  "depth"
     t.string   "view_template"
     t.string   "layout_template"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.boolean  "testimonials_show",   :default => false
+    t.integer  "testimonials_count",  :default => 0
+    t.string   "testimonials_select", :default => "Random"
   end
 
   add_index "refinery_pages", ["depth"], :name => "index_refinery_pages_on_depth"
@@ -119,15 +123,6 @@ ActiveRecord::Schema.define(:version => 20131002031646) do
     t.integer  "position"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-  end
-
-  create_table "refinery_testimonials_pagecontrols", :force => true do |t|
-    t.boolean  "show"
-    t.integer  "count"
-    t.string   "select"
-    t.integer  "page_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
   create_table "refinery_user_plugins", :force => true do |t|

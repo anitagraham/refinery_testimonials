@@ -13,7 +13,7 @@ module Refinery
 
       before_inclusion do
         Refinery::Plugin.register do |plugin|
-          plugin.name = "testimonials"
+          plugin.name = "refinery_testimonials"
           plugin.url = proc { Refinery::Core::Engine.routes.url_helpers.testimonials_admin_testimonials_path }
           plugin.pathname = root
           plugin.activity = {

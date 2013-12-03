@@ -20,8 +20,13 @@ def build_testimonial(from, quote)
   Refinery::Testimonials::Testimonial.create :name => from, :quote=>quote
 end
 
+def create_page(title)
+  Refinery::Page.create :title => 'Test Page'
+end
+
 module Refinery
   module Admin
+
     describe "Testimonials" do
       login_refinery_user
 
@@ -124,6 +129,49 @@ module Refinery
           end
         end
       end
+
+      describe '  Testimonials Controls'
+      before(:all)   do
+        create_page('Test Controls')
+      end
+
+      before(:each) do
+      end
+
+      it 'Shows the testimonials tab  ' do
+        visit refinery.admin_pages_path
+        click_link 'Edit this page'
+        within '#custom_testimonials_tab' do
+          expect(page).to have_content('Testimonials')
+        end
+      end
+
+      context 'Default Testimonial Settings' do
+        it 'should have a page part for controlling testimonial display' do
+          expect(page.html).to have_selector('#page_testimonial_control')
+        end
+        it 'should have default values for testimonial settings' do
+        #           checkbox page_testimonials_show value false
+        #           expect(page.html).to
+        #           input field page_testimonials_count should be 0
+        #           Select page_testimonials_select_recent should be checked
+        # =>        Select page_testimonials_select_random should not be checked
+        end
+
+      end
+
+      context 'Editing Testimonial Settings' do
+      #         create a page
+      #         page_testimonials_show can be changed, valid values are yes/no, does not accept invalid values
+      # =>      page_testimonials_count can be changed, accepts integer value
+      #                                 does not accept non-numeric value
+      # =>                              does not accept negative value
+      # =>                              does not accept real value
+      # =>     page_testimonials_show   can be changed
+      # =>                              accepts values random, recent
+      # =>                              does not accept values other than random, recent
+      end
+
     end
   end
 end

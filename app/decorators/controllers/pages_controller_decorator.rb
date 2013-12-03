@@ -1,16 +1,18 @@
 Refinery::PagesController.class_eval do
   append_before_filter :get_testimonials, :only => [:show]
-  # logger.debug "=======Appended get_testimonials======"
   protected
 
   def get_testimonials
-    # logger.debug "---------- Checking Testimonials---------------"
+    # logger.debug "Running testimonials"
+    # logger.debug "----------- #{page.testimonials_show} ---------------"
+    # logger.debug "----------- #{page.testimonials_count} ---------------"
+    # logger.debug "----------- #{page.testimonials_select} ---------------"
     if @page.testimonials_show
+
+      n = page.testimonials_count==0 ? Refinery::Testimonials::Testimonial.count : page.testimonials_count
       @testimonials = Refinery::Testimonials::Testimonial.scoped
-      # logger.debug "---------- There are  #{@testimonials.count} in total ---------------"
-      @testimonials = page.testimonials_select=='Random' ? @testimonials.sample : @testimonials.recent
-      @testimonials = @testimonials.limit(page.testimonials_count  ) unless page.testimonials_count==0
-      # logger.debug "---------- Making #{@testimonials.count} available---------------"
+      @testimonials = page.testimonials_select=='Random' ? @testimonials.random(n) : @testimonials.recent(n)
+
     end
   end
 end

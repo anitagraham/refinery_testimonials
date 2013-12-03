@@ -9,10 +9,10 @@ Gem::Specification.new do |s|
   s.summary           = 'Testimonials extension for Refinery CMS'
   s.require_paths     = %w(lib)
   s.files             = Dir["{app,config,db,lib}/**/*"] + ["readme.md"]
-  s.authors           = 'tsdbrown - Luke Brown- magpieuk - Lee Irving - http://www.transcendit.co.uk anita - Anita Graham - http:www.joli.com.au'
+  s.authors           = 'tsdbrown - Luke Brown- magpieuk, Lee Irving - http://www.transcendit.co.uk, anita - Anita Graham - http//:www.joli.com.au'
 
   # Runtime dependencies
-  s.add_dependency             'refinerycms-core'
+  s.add_dependency             'refinerycms'
 
   # Development dependencies (usually used for testing)
   s.add_development_dependency 'refinerycms-testing'

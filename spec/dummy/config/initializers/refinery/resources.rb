@@ -20,7 +20,7 @@ Refinery::Resources.configure do |config|
   # Configure Dragonfly
   # This is where in the middleware stack to insert the Dragonfly middleware
   # config.dragonfly_insert_before = "ActionDispatch::Callbacks"
-  # config.dragonfly_secret = "445060ea63617365c287250a265c00da1cb218a1ae1d613c"
+  # config.dragonfly_secret = "290495eb08bd378752ee686043cb5a1674fd3bab2d634243"
   # config.dragonfly_url_format = "/system/resources/:job/:basename.:format"
   # config.datastore_root_path = "/Applications/MAMP/www/refinerycms-testimonials/spec/dummy/public/system/refinery/resources"
 
