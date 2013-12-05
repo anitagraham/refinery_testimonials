@@ -17,10 +17,10 @@ module Refinery
           expect(page).to have_selector('#plugin_testimonials')
         end
       end
+
       context "When there are no testimonials" do
         it "Says no items yet" do
           visit refinery.testimonials_admin_testimonials_path
-
           expect(page).to have_content(::I18n.t('no_items_yet', :scope => 'refinery.testimonials.admin.testimonials.records'))
         end
 
